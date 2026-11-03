@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Issue Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container nav">
+            <a class="brand" href="/issues">Issue Tracker</a>
+            <nav>
+                {% if current_user %}
+                    <a href="/issues">All issues</a>
+                    <a href="/issues/new" class="button button-primary">New issue</a>
+
+                    <form method="post" action="/logout" class="logout-form">
+                        <button type="submit" class="button button-ghost">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="/login" class="button button-primary">Log In</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            MCP UAT Demo · FastAPI + SQLite
+        </div>
+    </footer>
+</body>
+</html>

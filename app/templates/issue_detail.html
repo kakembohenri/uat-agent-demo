@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ issue.title }} · Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">ISSUE #{{ issue.id }}</p>
+        <h1>{{ issue.title }}</h1>
+        <p class="muted">Created {{ issue.created_at.strftime("%d %b %Y, %H:%M") }}</p>
+    </div>
+    <a href="/issues" class="button button-ghost">← All issues</a>
+</div>
+
+<div class="detail-grid">
+    <section class="panel">
+        <h2>Description</h2>
+        <p class="issue-description">
+            {{ issue.description or "No description provided." }}
+        </p>
+
+        <div class="metadata">
+            <div>
+                <span class="muted">Created</span>
+                <strong>{{ issue.created_at.strftime("%d %b %Y, %H:%M") }}</strong>
+            </div>
+            <div>
+                <span class="muted">Last updated</span>
+                <strong>{{ issue.updated_at.strftime("%d %b %Y, %H:%M") }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <aside class="panel">
+        <h2>Issue properties</h2>
+
+        <div class="property">
+            <span class="muted">Current status</span>
+            <span class="badge status-{{ issue.status | lower | replace(' ', '-') }}">
+                {{ issue.status }}
+            </span>
+        </div>
+
+        <div class="property">
+            <span class="muted">Current priority</span>
+            <span class="badge priority-{{ issue.priority | lower }}">
+                {{ issue.priority }}
+            </span>
+        </div>
+
+        <hr>
+
+        <h3>Update issue</h3>
+        <form
+            method="post"
+            action="/issues/{{ issue.id }}/update"
+            class="issue-form"
+        >
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    {% for value in ["Open", "In Progress", "Resolved"] %}
+                    <option
+                        value="{{ value }}"
+                        {% if issue.status == value %}selected{% endif %}
+                    >
+                        {{ value }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority">
+                    {% for value in ["Low", "Medium", "High"] %}
+                    <option
+                        value="{{ value }}"
+                        {% if issue.priority == value %}selected{% endif %}
+                    >
+                        {{ value }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="button button-primary button-full">
+                Save changes
+            </button>
+        </form>
+    </aside>
+</div>
+{% endblock %}

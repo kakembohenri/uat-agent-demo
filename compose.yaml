@@ -1,0 +1,15 @@
+services:
+  uat_agent_demo:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////data/issues.db
+    volumes:
+      - issue_data:/data
+    restart: unless-stopped
+
+volumes:
+  issue_data:

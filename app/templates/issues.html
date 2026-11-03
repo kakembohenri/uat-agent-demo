@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Issues · Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">WORKSPACE</p>
+        <h1>Issues</h1>
+        <p class="muted">Track bugs, tasks and feature requests.</p>
+    </div>
+    <a href="/issues/new" class="button button-primary">+ Create issue</a>
+</div>
+
+<form method="get" action="/issues" class="search-form">
+    <input
+        type="search"
+        name="q"
+        placeholder="Search by title or description..."
+        value="{{ q }}"
+        aria-label="Search issues"
+    >
+    <button type="submit" class="button button-secondary">Search</button>
+    {% if q %}
+        <a href="/issues" class="button button-ghost">Clear</a>
+    {% endif %}
+</form>
+
+<div class="panel">
+    <div class="panel-heading">
+        <h2>All issues</h2>
+        <span class="muted">{{ issues | length }} result(s)</span>
+    </div>
+
+    {% if issues %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Issue</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issue in issues %}
+                <tr>
+                    <td>#{{ issue.id }}</td>
+                    <td>
+                        <a class="issue-link" href="/issues/{{ issue.id }}">
+                            {{ issue.title }}
+                        </a>
+                        <div class="muted description-preview">
+                            {{ issue.description or "No description provided" }}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge priority-{{ issue.priority | lower }}">
+                            {{ issue.priority }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge status-{{ issue.status | lower | replace(' ', '-') }}">
+                            {{ issue.status }}
+                        </span>
+                    </td>
+                    <td>{{ issue.created_at.strftime("%d %b %Y") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>No issues found</h3>
+        <p class="muted">
+            {% if q %}
+                Try a different search term.
+            {% else %}
+                Create your first issue to get started.
+            {% endif %}
+        </p>
+        {% if not q %}
+            <a href="/issues/new" class="button button-primary">Create your first issue</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
